@@ -10,31 +10,23 @@ Terminology:
 
 ---
 
-## Example Test Name
-
-Example test description. Example test description. Example test description. Example test description. Example test description. Example test description.
-
+## Testing: Coin Number to move **(VALID)**
+The program has to get input on each player's turn on what coin they want to move. They should do this by pressing the arrow keys or WASD to move a cursor left or right to select the coin and then press enter to select the coin.
 ### Test Data To Use
-
-Details of test data and reasons for selection. Details of test data and reasons for selection. Details of test data and reasons for selection.
-
+Use arrow keys to navigate *directly* to a valid coin and press enter. This **will not** involve selecting an invalid coin or navigating off the board. 
+eg RIGHT, RIGHT, ENTER to select a coin at index 2 starting at index 0.
 ### Expected Test Result
-
-Statement detailing what should happen. Statement detailing what should happen. Statement detailing what should happen. Statement detailing what should happen. 
+The program should store the selected coin and continue to get the player's move.
 
 ---
 
-## Example Test Name
-
-Example test description. Example test description. Example test description. Example test description. Example test description. Example test description.
-
+## Testing: Coin Number to move **(BOUNDARY)**
+The program has to get input on each player's turn on what coin they want to move. They should do this by pressing the arrow keys or WASD to move a cursor left or right to select the coin and then press enter to select the coin.
 ### Test Data To Use
-
-Details of test data and reasons for selection. Details of test data and reasons for selection. Details of test data and reasons for selection.
-
+We will use arrow keys to select a coin *on the very edges of the board*.
+eg ENTER or RIGHT x8, ENTER
 ### Expected Test Result
-
-Statement detailing what should happen. Statement detailing what should happen. Statement detailing what should happen. Statement detailing what should happen. 
+The program should store the selected coin and continue to get the player's move.
 
 ---
 
