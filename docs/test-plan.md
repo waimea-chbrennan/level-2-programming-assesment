@@ -30,4 +30,11 @@ The program should store the selected coin and continue to get the player's move
 
 ---
 
-
+## Testing: Coin Number to move **(INVALID)**
+The program has to get input on each player's turn on what coin they want to move. They should do this by pressing the arrow keys or WASD to move a cursor left or right to select the coin and then press enter to select the coin.
+### Test Data To Use
+We will use **keys other than arrow and WASD and enter**.
+eg XZC(*&CJHVK
+### Expected Test Result
+We should be able to hammer on the keyboard and the program should reject all irrelevant key presses with no changes to game state.
+---
