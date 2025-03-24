@@ -37,4 +37,5 @@ We will use **keys other than arrow and WASD and enter**.
 eg XZC(*&CJHVK
 ### Expected Test Result
 We should be able to hammer on the keyboard and the program should reject all irrelevant key presses with no changes to game state.
+
 ---
