@@ -70,20 +70,38 @@ fun main() = session {
         printSelectionCursor(board, index, playerTurnProgress)
 
     }.runUntilSignal {
-        onKeyPressed {
-            when(key){
-                Keys.Q -> signal()
-                Keys.RIGHT -> index++
-                Keys.LEFT -> index--
-
-            }
-        }
+        handleKeys(gameState)
 
     }
 
 
 }
 
+/**
+ * handleKeys()
+ * Decides what action to take when keys pressed based off of the moveState
+ */
+fun RunScope.handleKeys(state: GameState ) {
+    onKeyPressed {
+        when(key){
+            Keys.Q -> signal()
+            Keys.RIGHT,Keys.D -> {
+                //Only allow moving right if it is a valid place on our board and, if we are selecting, not any further right than the coin we selected
+                if(state.index<state.board.lastIndex && (state.index<state.selectedIndex || state.playerTurnProgress==0) ) state.index++
+            }
+            Keys.LEFT,Keys.A -> {
+                if(state.index>0) state.index--
+            }
+            Keys.DOWN,Keys.S -> {
+                //We only want to remove a coin if in moving mode and cursor is in cell 0
+                if(state.selectedIndex==0||state.playerTurnProgress==1) {}
+            }
+            Keys.ENTER,Keys.SPACE-> {
+                //Check whether valid coin selected
+                if(state.board[state.index]!=EMPTY){
+                    //Move into moving mode if we are not already
+                    if(state.playerTurnProgress==0) state.playerTurnProgress=1
+                    state.selectedIndex = state.index
 
 fun RenderScope.printSelectionCursor(board: List<Char>, index: Int, playerTurnProgress: Int){
 
