@@ -2,7 +2,7 @@
  * =====================================================================
  * Programming Project for NCEA Level 2, Standard 91896
  * ---------------------------------------------------------------------
- * Project Name:   Old Gold Asesment Task
+ * Project Name:   Old Gold Assessment Task
  * Project Author: Connor Brennan
  * GitHub Repo:    https://github.com/waimea-chbrennan/level-2-programming-assesment
  * ---------------------------------------------------------------------
