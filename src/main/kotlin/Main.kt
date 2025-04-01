@@ -81,7 +81,6 @@ fun main() = session {
 
     }
 
-
 }
 
 /**
@@ -110,16 +109,22 @@ fun RunScope.handleKeys(state: GameState ) {
                     if(state.playerTurnProgress==0) state.playerTurnProgress=1
                     state.selectedIndex = state.index
 
-fun RenderScope.printSelectionCursor(board: List<Char>, index: Int, playerTurnProgress: Int){
+                }
+            }
 
+        }
+    }
 }
 
 
-
-fun RenderScope.printPlayerInfo(player: Int, playerTurnProgress: Int){
-    cyan{ bold{ textLine("Player $player to move\n") } }
+/**
+ * printPlayerInfo()
+ * This function will print the current state with instructions to the player
+ */
+fun RenderScope.printPlayerInfo(state: GameState){
+    cyan{ bold{ textLine("Player ${state.playerNumber} to move\n") } }
     black(isBright = true) {
-        when (playerTurnProgress) {
+        when (state.playerTurnProgress) {
             0 -> text("Select a coin to move using WASD or Arrow keys")
             1 -> text("Select where you want this coin to be moved")
         }
@@ -198,7 +203,6 @@ fun RenderScope.printBoard(state: GameState, coinAnim: TextAnim) {
  * initBoard()
  * Does the initial setup to place and randomize coins.
  */
-fun initBoard(board: MutableList<Char>) {
 fun initBoard(state: GameState) {
     //We want to add one gold coin and a random amount of other coins
     state.board.add(GOLD_COIN)
