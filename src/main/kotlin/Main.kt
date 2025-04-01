@@ -142,59 +142,57 @@ fun RenderScope.printBoard(state: GameState, coinAnim: TextAnim) {
     ){
         state.board.forEachIndexed { index, slot ->
             cell(col=index) {
-                printBoardCell(coinAnim, index, selectedIndex, slot)
+                when(slot) {
+                    GOLD_COIN -> {
+                        if(state.index==index){
+                            green()
+                            grid(Cols(9), characters = GridCharacters.CURVED, justification = Justification.CENTER){
+                                cell {
+                                    yellow(isBright = true)
+                                    bold()
+                                    textLine(coinAnim)
+                                }
+                            }
+                        } else {
+                            textLine()
+                            yellow(isBright = true)
+                            bold()
+                            textLine(coinAnim)
+                        }
+                    }
+                    COIN -> {
+                        if(state.index==index){
+                            green()
+                            grid(Cols(9), characters = GridCharacters.CURVED, justification = Justification.CENTER){
+                                cell {
+                                    white()
+                                    text(coinAnim)
+                                }
+                            }
+                        } else {
+                            textLine()
+                            textLine(coinAnim)
+                            textLine(" ")
+
+                        }
+                    }
+                    EMPTY -> {
+                        if (state.index == index) {
+                            white {
+                                bordered(BorderCharacters.CURVED) {
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
             }
         }
 
     }
 
-}
-fun RenderScope.printBoardCell(coinAnim: TextAnim, index: Int, selectedIndex: Int, coinType: Char){
-    when(coinType) {
-        GOLD_COIN -> {
-            if(selectedIndex==index){
-                green()
-                grid(Cols(9), characters = GridCharacters.CURVED, justification = Justification.CENTER,){
-                    cell {
-                        yellow(isBright = true)
-                        bold()
-                        textLine(coinAnim)
-                    }
-                }
-            } else {
-                textLine()
-                yellow(isBright = true)
-                bold()
-                textLine(coinAnim)
-            }
-        }
-        COIN -> {
-            if(selectedIndex==index){
-                green()
-                grid(Cols(9), characters = GridCharacters.CURVED, justification = Justification.CENTER,){
-                    cell {
-                        white()
-                        text(coinAnim)
-                    }
-                }
-            } else {
-                textLine()
-                textLine(coinAnim)
-                textLine(" ")
 
-            }
-        }
-        EMPTY -> {
-            if (selectedIndex == index) {
-                white {
-                    bordered(BorderCharacters.CURVED) {
-                    }
-                }
-            }
-
-        }
-    }
-}
 
 /**
  * initBoard()
