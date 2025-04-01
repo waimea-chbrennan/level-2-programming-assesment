@@ -16,6 +16,7 @@ import com.varabyte.kotter.foundation.input.*
 import com.varabyte.kotter.foundation.text.*
 import com.varabyte.kotter.runtime.render.*
 import com.varabyte.kotter.foundation.anim.*
+import com.varabyte.kotter.runtime.RunScope
 import com.varabyte.kotter.runtime.Session
 import com.varabyte.kotterx.decorations.BorderCharacters
 import com.varabyte.kotterx.decorations.bordered
@@ -28,11 +29,22 @@ import kotlin.time.Duration.Companion.milliseconds
 const val GOLD_COIN = 'G'
 const val COIN = 'c'
 const val EMPTY = '-'
+const val NUM_SILVER_COINS = 5
+const val NUM_BOARD_SPACES = 6
 
+class GameState(session: Session) {
+    val board = session.liveListOf<Char>()
+    var playerNumber by session.liveVarOf(1)
+    var playerTurnProgress by session.liveVarOf(0) // 0 = selecting, 1 = moving
+    var index by session.liveVarOf(0)
+    var selectedIndex = 0
 
+}
 
 
 fun main() = session {
+    val gameState = GameState(this)
+
     val coinAnim = textAnimOf(listOf("""
         /===\
         | $ |
@@ -54,20 +66,15 @@ fun main() = session {
         | $ |
         \===/
     """.trimIndent()), 150.milliseconds)
-    val board = liveListOf<Char>()
-    var player by liveVarOf(1)
-    var playerTurnProgress by liveVarOf(0) // 0=selecting 1=moving
-    var index by liveVarOf(0)
+
+
 
     welcomeIntro()
-
-    initBoard(board)
+    initBoard(gameState)
 
     section {
-        printPlayerInfo(player, playerTurnProgress)
-
-        printBoard(board,coinAnim,index)
-        printSelectionCursor(board, index, playerTurnProgress)
+        printPlayerInfo(gameState)
+        printBoard(gameState,coinAnim)
 
     }.runUntilSignal {
         handleKeys(gameState)
@@ -126,14 +133,14 @@ fun RenderScope.printPlayerInfo(player: Int, playerTurnProgress: Int){
  * printBoard()
  * Prints the current board of coins with desired board colour and animations for coins
  */
-fun RenderScope.printBoard(board: List<Char>,coinAnim: TextAnim,selectedIndex: Int) {
+fun RenderScope.printBoard(state: GameState, coinAnim: TextAnim) {
     grid(
-        Cols.uniform(board.size,11),
+        Cols.uniform(state.board.size,11),
         characters = GridCharacters.CURVED,
         maxCellHeight = 5,
         justification = Justification.CENTER,
     ){
-        board.forEachIndexed { index, slot ->
+        state.board.forEachIndexed { index, slot ->
             cell(col=index) {
                 printBoardCell(coinAnim, index, selectedIndex, slot)
             }
@@ -194,12 +201,13 @@ fun RenderScope.printBoardCell(coinAnim: TextAnim, index: Int, selectedIndex: In
  * Does the initial setup to place and randomize coins.
  */
 fun initBoard(board: MutableList<Char>) {
+fun initBoard(state: GameState) {
     //We want to add one gold coin and a random amount of other coins
-    board.add(GOLD_COIN)
-    for(i in 1..5) board.add(COIN)
-    for(i in 1..6) board.add(EMPTY)
-    //Ensure gold coin does not start at index 0, game would be no fun
-    while(board[0]==GOLD_COIN) board.shuffle(Random(System.currentTimeMillis())) //Have to specify source of randomness bug ?
+    state.board.add(GOLD_COIN)
+    for(i in 1..NUM_SILVER_COINS) state.board.add(COIN)
+    for(i in 1..NUM_BOARD_SPACES) state.board.add(EMPTY)
+    //Ensure gold coin does not start at index 0, game would be no fun as player 1 would win instantly!
+    while(state.board[0]==GOLD_COIN) state.board.shuffle(Random(System.currentTimeMillis())) //Have to specify source of randomness bug ?
 }
 
 /**
