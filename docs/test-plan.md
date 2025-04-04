@@ -14,7 +14,7 @@ Terminology:
 The program has to get input on each player's turn on what coin they want to move. They should do this by pressing the arrow keys or WASD to move a cursor left or right to select the coin and then press enter to select the coin.
 ### Test Data To Use
 Use arrow keys to navigate *directly* to a valid coin and press enter. This **will not** involve selecting an invalid coin or navigating off the board. 
-eg RIGHT, RIGHT, ENTER to select a coin at index 2 starting at index 0.
+e.g. RIGHT, RIGHT, ENTER to select a coin at index 2 starting at index 0.
 ### Expected Test Result
 The program should store the selected coin and continue to get the player's move.
 
@@ -24,7 +24,7 @@ The program should store the selected coin and continue to get the player's move
 The program has to get input on each player's turn on what coin they want to move. They should do this by pressing the arrow keys or WASD to move a cursor left or right to select the coin and then press enter to select the coin.
 ### Test Data To Use
 We will use arrow keys to select a coin *on the very edges of the board*.
-eg ENTER or RIGHT x8, ENTER
+e.g. ENTER or RIGHT x8, ENTER
 ### Expected Test Result
 The program should store the selected coin and continue to get the player's move.
 
@@ -54,14 +54,14 @@ NUM_BOARD_SPACES spaces in the board. There should only be one coin per cell and
 
 ---
 
-## Testing: Moving A Coin (invalid)
+## Testing: Moving A Coin (INVALID)
 
 The user should only be able to move the cursor to the left of the coin they have selected that they want to move.
 This is to prevent the user moving a coin to the right initially as it is a clear indication that they can not do this.
 
 ### Test Data To Use
 
-We can select a coin and then try to move the cursor right eg from index 0:
+We can select a coin and then try to move the cursor right e.g. from index 0:
 D D ENTER DDDDDDDDDDDDD RIGHT RIGHT A
 
 ### Expected Test Result
