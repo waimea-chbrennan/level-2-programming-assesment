@@ -22,11 +22,18 @@ import com.varabyte.kotterx.grid.GridCharacters
 import com.varabyte.kotterx.grid.grid
 import com.varabyte.kotterx.text.Justification
 
-const val playerNumToHsvMultiplier = 120
+//Use this to define the separation between player colours. Max range 1-180 inclusive
+const val PLAYER_HSV_MULT = 180
+
+val GOLD_COL = Color.BRIGHT_YELLOW
+val SILVER_COL = Color.WHITE
+val SELECTABLE_COL = Color.GREEN
+val UNSELECTABLE_COL = Color.RED
 
 
 /**
  * Decides what action to take based on key pressed, refer to GameState
+ * @param state Calls GameState functions to handle key presses
  */
 fun RunScope.handleKeys(state: GameState ) {
     onKeyPressed {
@@ -38,21 +45,22 @@ fun RunScope.handleKeys(state: GameState ) {
             Keys.LEFT, Keys.A -> state.moveCursor(-1)
             Keys.DOWN, Keys.S -> state.moveCursorToFromOffBoard()
             Keys.UP, Keys.W -> state.moveCursorToFromOffBoard()
-            Keys.ENTER, Keys.SPACE -> state.setCoinPosition()
+            Keys.ENTER, Keys.SPACE -> state.handleSelectOrMove()
         }
     }
 }
 
 /**
  * Prints the current state with instructions to the player
+ * @param state Used for getting playerNumber information
  */
 fun RenderScope.printPlayerInfo(state: GameState){
     //hsv to show a unique colour based on player number
-    hsv(playerNumToHsvMultiplier*state.playerNumber,1.0f,1.0f){ bold{ textLine("Player ${state.playerNumber} to move\n") } }
+    hsv(PLAYER_HSV_MULT*state.playerNumber,1.0f,1.0f){ bold{ textLine("Player ${state.playerNumber} to move\n") } }
     black(isBright = true) {
         when (state.playerTurnProgress) {
-            0 -> text("Select a coin to move using WASD or Arrow keys")
-            1 -> text("Select where you want this coin to be moved")
+            PLAYER_SELECTING -> text("Select a coin to move using WASD or Arrow keys")
+            PLAYER_MOVING -> text("Select where you want this coin to be moved")
         }
     }
 }
@@ -62,13 +70,17 @@ fun RenderScope.printPlayerInfo(state: GameState){
 
 /**
  * Prints the current board of coins with desired board colour and animations for coins
+ * @param state A copy of the current GameState, used for board data operations.
+ * @param coinAnim The textAnimOf the coin animation used for all coins in game
  */
 fun RenderScope.printBoard(state: GameState, coinAnim: TextAnim) {
 
     /**
-     * Prints an indivual cell made from a coin of certain colour and sometimes a background
+     * Prints an individual cell made from a coin of certain colour and sometimes a background
+     * @param borderColour Controls the colour of the border, null for transparent
+     * @param coinColour The colour of the coin to print
      */
-    fun RenderScope.printBoardCell( borderColour: Color?, coinColour: Color) {
+    fun RenderScope.printBoardCell(borderColour: Color?, coinColour: Color) {
         //print coin with no border
         if(borderColour == null){
             textLine()
@@ -78,6 +90,7 @@ fun RenderScope.printBoard(state: GameState, coinAnim: TextAnim) {
         } else {
             //Print coin with border
             color(borderColour)
+            //We have to use a grid for constant size because the bordered method will change size with animation frames.
             grid(Cols(9), characters = GridCharacters.CURVED, justification = Justification.CENTER){
                 cell {
                     color(coinColour)
@@ -87,6 +100,28 @@ fun RenderScope.printBoard(state: GameState, coinAnim: TextAnim) {
         }
     }
 
+    /**
+     * Handles logic as to select border based on GameState and prints text of colour supplied
+     * @param index
+     * @param coinColor
+     */
+    fun handleBoardCell(index: Int, coinColor: Color) {
+        //We need a cursor
+        if(state.cursorIndex==index){
+            if(state.amountOfMovesPossible(state.cursorIndex)!=0) {
+                printBoardCell( SELECTABLE_COL, coinColor)
+            } else {
+                printBoardCell( UNSELECTABLE_COL, coinColor)
+            }
+        } else { //We dont need a cursor
+            printBoardCell(null, coinColor)
+        }
+    }
+
+    /**
+     * We iterate over the board and print each of three options. Nothing, regular coin, or gold coin
+     * Each of these has three options. SELECTABLE_COL, UNSELECTABLE_COL or no border colour.
+     */
     grid(
         Cols.uniform(state.board.size,11),
         characters = GridCharacters.CURVED,
@@ -96,31 +131,10 @@ fun RenderScope.printBoard(state: GameState, coinAnim: TextAnim) {
         state.board.forEachIndexed { index, slot ->
             cell(col=index) {
                 when(slot) {
-                    GOLD_COIN -> {
-                        if(state.cursorIndex==index){
-                            if(state.amountOfMovesPossible(state.cursorIndex)!=0) {
-                                printBoardCell( Color.GREEN, Color.BRIGHT_YELLOW)
-                            } else {
-                                printBoardCell( Color.WHITE, Color.BRIGHT_YELLOW)
-                            }
-                        } else {
-                            printBoardCell(null, Color.BRIGHT_YELLOW)
-                        }
-                    }
-                    COIN -> {
-                        if(state.cursorIndex==index){
-                            //
-                            if(state.amountOfMovesPossible(state.cursorIndex)!=0) {
-                                printBoardCell( Color.GREEN, Color.WHITE)
-                            } else {
-                                printBoardCell( Color.WHITE, Color.WHITE)
-                            }
-                        } else {
-                            printBoardCell(null, Color.WHITE)
-
-                        }
-                    }
+                    GOLD_COIN -> handleBoardCell(index, GOLD_COL)
+                    COIN -> handleBoardCell(index, SILVER_COL)
                     EMPTY -> {
+                        //Can't extract this into printBoardCell as receivership of TextAnim and String as one param is not supported and other logic would be less efficient
                         if (state.cursorIndex == index) {
                             if(state.playerTurnProgress==1){
                                 green()
@@ -135,6 +149,7 @@ fun RenderScope.printBoard(state: GameState, coinAnim: TextAnim) {
             }
         }
     }
+    //Print the off-board grid cell below the board at index 0
     grid(
         Cols.uniform(1,11),
         characters = GridCharacters.CURVED,
@@ -160,6 +175,7 @@ fun RenderScope.printBoard(state: GameState, coinAnim: TextAnim) {
 
 /**
  * Congratulate the winning player
+ * @param state Used for getting the winning player number of the game
  */
 fun Session.winScreen(state: GameState) {
     val banner = "=".repeat(25)
@@ -168,8 +184,9 @@ fun Session.winScreen(state: GameState) {
         yellow(isBright = true)
         textLine(banner)
 
-        hsv(playerNumToHsvMultiplier*state.playerNumber,1.0f,1.0f) {
-            textLine("CONGRATULATIONS, PLAYER ${state.winner}")
+        text("CONGRATULATIONS, ")
+        hsv(PLAYER_HSV_MULT*state.winner,1.0f,1.0f) {
+            textLine("PLAYER ${state.winner}")
         }
 
         textLine("Thanks for playing Old Gold!")
@@ -185,10 +202,14 @@ fun Session.winScreen(state: GameState) {
  */
 fun Session.welcomeIntro() {
     section {
-        bold()
-        yellow(isBright = true)
-        textLine("Welcome to the Old Gold Game!")
+        black(isBright = true)
+        bold() {
+        yellow(isBright = true) {
+        textLine("Welcome to the Old Gold Game!") }}
         textLine()
-
+        text("2 players will take turns selecting and then moving a coin left on the board, with the aim of removing the ")
+        bold{yellow(isBright = true){textLine("GOLD COIN!")} }
+        textLine("Coins in the first slot on the board can be removed by pressing ↑/↓")
+        textLine()
     }.run()
 }
