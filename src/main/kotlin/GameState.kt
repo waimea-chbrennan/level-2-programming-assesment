@@ -55,14 +55,15 @@ class GameState(session: Session) {
      * @param offset The number of positions to move the cursor. Positive = right , negative = left
      */
     fun moveCursor(offset: Int) {
+        val wishedIndex = cursorIndex+offset
         //Ensure cursor will be moved within the board
-        if(cursorIndex+offset>board.lastIndex) return
-        if(cursorIndex+offset<0) return
+        if(wishedIndex>board.lastIndex) return
+        if(wishedIndex<0) return
 
         //If we are moving a coin, the cursor should not be right of the selectedIndex
-        if(cursorIndex+offset>selectedIndex && playerTurnProgress==PLAYER_MOVING) return
+        if(wishedIndex>selectedIndex && playerTurnProgress==PLAYER_MOVING) return
         //If we are moving a coin, we should not be able to jump over a coin
-        if(cursorIndex+offset<selectedIndex-amountOfMovesPossible(selectedIndex) && playerTurnProgress==PLAYER_MOVING) return
+        if(wishedIndex<selectedIndex-amountOfMovesPossible(selectedIndex) && playerTurnProgress==PLAYER_MOVING) return
 
         cursorIndex+=offset
     }
