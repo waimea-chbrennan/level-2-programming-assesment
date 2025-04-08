@@ -15,6 +15,7 @@ import com.varabyte.kotter.foundation.runUntilSignal
 import com.varabyte.kotter.foundation.session
 import kotlin.time.Duration.Companion.milliseconds
 
+//Time between each frame of the coin animation
 const val COIN_ANIM_FRAME_TIME_MS = 200
 
 fun main() = session {

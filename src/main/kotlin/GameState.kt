@@ -7,7 +7,6 @@
  * GitHub Repo:    https://github.com/waimea-chbrennan/level-2-programming-assesment
  *
  * This file contains GameState, handling core game logic such as turns and other player info
- *
  * =====================================================================
  */
 
@@ -37,12 +36,12 @@ class GameState(session: Session) {
     var playerTurnProgress by session.liveVarOf(PLAYER_SELECTING) // 0 = selecting, 1 = moving
     var cursorIndex by session.liveVarOf(0)
     private var selectedIndex = 0
-    var winner = -1
+    var winner = -1 //Start invalid with no winner
     var onWin: (() -> Unit)? = null
 
 
     /**
-     * handles the half-slot of the off-board position. we do not need this position to be in board as it does not
+     * Handles the half-slot of the off-board position. we do not need this position to be in board as it does not
      * need to hold a coin, only a cursor. We consider the cursorIndex at -1 to be here
      */
     fun moveCursorToFromOffBoard() {
@@ -69,9 +68,9 @@ class GameState(session: Session) {
     }
 
     /**
-     * Is called when enter key is pressed and handles correct action for moving or selecting
+     * Handle whether to select or move a coin.
      */
-    fun setCoinPosition() {
+    fun handleSelectOrMove() {
         if(playerTurnProgress==PLAYER_SELECTING) {
             setSelectedCoin()
         } else {
@@ -81,6 +80,7 @@ class GameState(session: Session) {
 
     /**
      * Selects only a valid coin and moves into selection mode
+     * @see handleSelectOrMove
      */
     private fun setSelectedCoin() {
         //Useless selecting no coin at all or a coin that can't be moved
@@ -93,6 +93,7 @@ class GameState(session: Session) {
 
     /**
      * Moves the selected coin to the selected position on (or off) board
+     * @see handleSelectOrMove
      */
     private fun moveSelectedCoin() {
         //cancel the move if the player wants to move coin to original position
@@ -101,7 +102,7 @@ class GameState(session: Session) {
             return
         }
         //handle edge case of removing coin from index 0
-        if(selectedIndex==0&&cursorIndex==-1){
+        if(selectedIndex==0){
             //if we are removing gold coin, move has won
             if(board[selectedIndex]==GOLD_COIN) {
                 winner=playerNumber
@@ -109,9 +110,10 @@ class GameState(session: Session) {
                 board[selectedIndex] = EMPTY
                 return
             }
-        } else {
+        } else { //Normal board case
             board[cursorIndex] = board[selectedIndex]
         }
+        //Still could be removing a normal coin from 0 or a regular move.
         board[selectedIndex] = EMPTY
 
         //player turn now finished, switch to other player, set cursor to start and switch to selecting mode
@@ -124,6 +126,7 @@ class GameState(session: Session) {
     /**
      * Returns the amount of moves that could be made with the current board state
      * @param atIndex The index of the board to inspect moves with
+     * @return The amount of moves possible, 0 if none
      */
     fun amountOfMovesPossible(atIndex:Int): Int{
         //cant move an empty space
@@ -141,7 +144,7 @@ class GameState(session: Session) {
 
 
     /**
-]     * Does the initial setup to place and randomize coins.
+     * Initial setup to place and randomize coins.
      */
     fun initBoard() {
         //We want to add one gold coin and a random amount of other coins
