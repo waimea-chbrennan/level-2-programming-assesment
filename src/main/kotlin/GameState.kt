@@ -33,11 +33,15 @@ const val PLAYER_MOVING = 1
 class GameState(session: Session) {
     val board = session.liveListOf<Char>()
     var playerNumber by session.liveVarOf(1)
+    var playerNames = mutableListOf<String>()
     var playerTurnProgress by session.liveVarOf(PLAYER_SELECTING) // 0 = selecting, 1 = moving
     var cursorIndex by session.liveVarOf(0)
     private var selectedIndex = 0
     var winner = -1 //Start invalid with no winner
     var onWin: (() -> Unit)? = null
+
+
+    
 
 
     /**

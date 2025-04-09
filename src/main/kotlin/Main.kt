@@ -43,7 +43,7 @@ fun main() = session {
         \===/
     """.trimIndent()), COIN_ANIM_FRAME_TIME_MS.milliseconds)
 
-    welcomeIntro()
+    welcomeIntro(gameState)
     gameState.initBoard()
 
     section {
