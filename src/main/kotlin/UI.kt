@@ -185,7 +185,7 @@ fun Session.winScreen(state: GameState) {
 
         text("CONGRATULATIONS, ")
         hsv(PLAYER_HSV_MULT*state.winner,1.0f,1.0f) {
-            textLine("PLAYER ${state.winner}")
+            textLine("${state.playerNames[state.winner-1]} (player ${state.winner})") //state.winner is stored as player 1 or 2 while player names are 0 or 1
         }
 
         textLine("Thanks for playing Old Gold!")
