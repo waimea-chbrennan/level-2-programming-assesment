@@ -22,21 +22,22 @@ List of all possible program inputs for reference:
  - enter (confirm coin move)
 
 
-
-22 tests total.
-
-
+VALID= ||||| ||| tests
+INVALID= ||||| ||  tests
+BOUNDARY= ||||| | tests
+4 other
+25 tests total.
 
 # Player Name Testing
 
-## Testing: Player name input **(VALID)**
+### Testing: Player name input **(VALID)**
 Each player is asked their name and this is stored. If they enter a blank name, it should not accept this and ask them again.
 
-### Test Data To Use
+#### Test Data To Use
 eg
-`"Connor", "bingus", "Jessica"`
+`"Connor", "bingus"`
 
-### Expected Test Result
+#### Expected Test Result
 The program should store the player's name and continue
 
 
@@ -70,12 +71,11 @@ The program should move the cursor left if the player presses left and right if 
 
 
 
-## Testing: Moving cursor to select coin **(BOUNDARY)**
+## Testing: Moving cursor to select coin ends of board **(BOUNDARY)**
 The program has to get input on each player's turn on what coin they want to move. They should do this by pressing the arrow keys or WASD to move a cursor left or right to above wished coin to select.
 ### Test Data To Use
 We will use arrow keys to move cursor to the very edges of the board.
 `RIGHT x11` (starting at 0 and moving to slot 11)
-
 ### Expected Test Result
 The cursor should move to the very right end of the board on the 11th right key press.
 
@@ -101,7 +101,7 @@ eg `LEFT` or `RIGHT x12`
 The cursor should not be able to move off the board under any circumstance and so the program will ignore this input.
 
 ---
-# Selecting a Coin
+# Confirming coin select
 
 ## Testing: Selecting a valid coin
 When the cursor is over a coin that can be moved by more than one space (so not boundary), the user should press space and enter and the program stores the coin and enters selection mode.
@@ -115,8 +115,9 @@ eg selecting coin in this example.
 The program should store this coin and move into moving mode.
 
 
-## Testing: Selecting a boundary coin
-Selecting a coin where there is only one possible place to move is a boundary case but still possible. This tests the program recognising how many moves are possible for a coin.
+## Testing: Selecting coin with only one possible move (BOUNDARY)
+Selecting a coin where there is only one possible place to move is a boundary case but still possible. 
+This tests the program recognising how many moves are possible for a coin.
 ### Test Data To Use
 Select 2nd ex coin
 `*_C ...`
@@ -124,17 +125,28 @@ Select 2nd ex coin
 The program should store this coin and move into moving mode.
 
 
+## Testing: Selecting coin with 11 possible moves (BOUNDARY)
+Test whether we can select a coin with the maximum amount of moves possible for given board size to test the
+program recognising how many moves are possible for a coin.
+### Test data to use
+`__________G`
+move cursor to far right and press `ENTER` to select coin
+### Expected test result
+The program should let us select the coin and then move into moving the coin mode.
 
-## Testing: Selecting a boundary coin
+
+
+## Testing: Selecting a coin in the far left of the board (BOUNDARY)
 The coin in the left cell about to be removed is a boundary case but the user should be able to select this.
 ### Test Data To Use
-Select ex coin
+Select coin in ex:
 `C**** ...`
 ### Expected Test Result
 The program should store this and enter special moving mode to allow this coin - or rather cursor at this stage - to be moved 'up and down' on and off the board.
 
 
-## Testing: Selecting an invalid coin
+
+## Testing: Selecting a coin with no moves (INVALID)
 If there is a coin immediately to the left of our coin, there are no valid moves and therefore the coin should not be selectable.
 ### Test Data To Use
 press enter/space to select index 3 in this example.
@@ -142,7 +154,7 @@ press enter/space to select index 3 in this example.
 ### Expected Test Result
 The program should reject this input, it is invalid.
 
-## Testing: Selecting an invalid coin (empty space)
+## Testing: Selecting an empty space (INVALID)
 If the user tries to selects an empty cell, this is not a valid coin to select.
 ### Test data to use
 `C_ ...`
@@ -163,7 +175,7 @@ This is to prevent the user moving a coin to the right initially as it is a clea
 ### Test Data To Use
 
 We can select a coin and then try to move the cursor right e.g. from index 0 to coin at 2:
-`D, D, ENTER, D,D,D,D,D,D,D,D,D,D,D,D,D, RIGHT, RIGHT`
+`D, D, ENTER, D x12, RIGHT, RIGHT`
 
 ### Expected Test Result
 The cursor should move right two spaces, the coin should be selected, then the cursor will not move right no matter how many times the user presses right.
@@ -176,7 +188,7 @@ be moved further to the left than the greatest possible move, ie not be able to 
 ### Test Data To Use
 following setup
 `C___C ...`
-right coin selected then: ` LEFT x3, A x2`
+right coin selected then: ` LEFT x3, A x2, LEFT`
 ### Expected Test Result
 The cursor should end up on the right of the left coin on 3rd keypress and not move any further left.
 `C|__C`
@@ -188,6 +200,7 @@ The user should be able to move their cursor as many places left as they wish as
 enter/space pressed at index 3 of ex then: `LEFT x2`
 ### Expected Test Result
 The cursor should end up at index 1, and the program should be ready to accept the press of enter to execute this move.
+
 
 ---
 # Confirming Coin Move
@@ -212,6 +225,23 @@ Not move cursor and press enter
 ### Expected Test Result
 The coin will not move, and it will remain the players turn, ready for them to select another coin by delselecting the current coin and moving into selection mode.
 
+## Testing: Confirming coin move (BOUNDARY)
+The program should allow the user to move the coin just one slot in the board.
+### Test data to use
+`___|C`
+`ENTER`
+Select coin, move cursor to left and press enter
+### Expected test result
+The coin will move one space to the left and the program will progress to the next players turn.
+
+## Testing: Confirming coin move (BOUNDARY)
+The program should allow the user to move the coin the greatest possible distance (11 spaces).
+### Test data to use
+`|__________G`
+`ENTER`
+### Expected test result
+The coin will move to the far left of the board and the program will progress to the next player's turn.
+
 ---
 # Removing Coins
 
@@ -222,7 +252,7 @@ Test whether the program recognises removing a gold coin as a win
 `|`
 (cursor in off board position with gold coin selected in index 0) press `ENTER`
 ### Expected Test Result
-The coin will be removed and the program will immediately proceed to exiting.
+The coin will be removed and the program will immediately proceed to congratulating winning player.
 
 
 ## Testing: Player removing normal coin (valid)
