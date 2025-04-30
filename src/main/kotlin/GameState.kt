@@ -84,7 +84,8 @@ class GameState(session: Session) {
     }
 
     /**
-     * Selects only a valid coin and moves into selection mode
+     * Selects only a valid coin and moves into selection mode.
+     * Returns with no change if selection is not valid.
      * @see handleSelectOrMove
      */
     private fun setSelectedCoin() {
@@ -97,7 +98,8 @@ class GameState(session: Session) {
     }
 
     /**
-     * Moves the selected coin to the selected position on (or off) board
+     * Moves the selected coin to the selected position on (or off) board.
+     * Covers normal board cases and also removing coins entirely.
      * @see handleSelectOrMove
      */
     private fun moveSelectedCoin() {
@@ -118,7 +120,7 @@ class GameState(session: Session) {
         } else { //Normal board case
             board[cursorIndex] = board[selectedIndex]
         }
-        //Still could be removing a normal coin from 0 or a regular move.
+        //clear cell in case of normal coin move
         board[selectedIndex] = EMPTY
 
         //player turn now finished, switch to other player, set cursor to start and switch to selecting mode
@@ -149,7 +151,7 @@ class GameState(session: Session) {
 
 
     /**
-     * Initial setup to place and randomize coins.
+     * Initial setup of board to place and randomize coins.
      */
     fun initBoard() {
         //We want to add one gold coin and a random amount of other coins
