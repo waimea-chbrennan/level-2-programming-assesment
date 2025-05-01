@@ -97,6 +97,7 @@ fun RenderScope.printBoard(state: GameState, coinAnim: TextAnim) {
                             }
                             bordered(BorderCharacters.CURVED) {}
                         }
+                        textLine("\n ".repeat(7))
                     }
 
                 }
@@ -228,7 +229,7 @@ fun Session.welcomeIntro(state: GameState) {
             }
         }
     }
-    //Add some space under player names
+    //We need some space under player names for nice formatting
     section {
         textLine()
         textLine()
