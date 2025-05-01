@@ -1,10 +1,12 @@
 ### IntelliJ IDEA ###
 !**/src/main/**/out/
 !**/src/test/**/out/
-!build/libs/
 
 ### Gradle ###
 build/*
+!build/libs/
+!build/libs/**
+
 .gradle/
 
 ### Kotlin ###
