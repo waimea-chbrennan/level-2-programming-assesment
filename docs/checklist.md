@@ -12,7 +12,7 @@ The game functions correctly and meets the specification:
 - [x] The game is **playable**
 - [x] The **instructions** for the game are available in-game
 - [x] **Two players** can play
-- [ ] Player **names** are used to identify each player
+- [x] Player **names** are used to identify each player
 - [x] Players **take turns** to play
 - [x] Players provides **input data** to the game (e.g. moves to make)
 - [x] The **current status** of the game is shown after each play
@@ -21,15 +21,15 @@ The game functions correctly and meets the specification:
 ### Program Code
 
 The program stores data using:
-- [x] **Variables** of at least two types (e.g. int, text, boolean)
+- [x] **Variables** of at least two types (e.g. int, text, boolean) *Int, char, bool*
 - [x] At least one **data collection** (array / list) to store some elements of the game data
 
 The program structure:
-- [x] Is broken up into **functions**: a main function, plus other supporting functions 
+- [x] Is broken up into **functions**: a main function, plus other supporting functions *main, printBoard, handleKeys*
 - [x] Contains **sequences** of instructions
-- [x] Uses **conditional** instructions to control the program flow
-- [x] Uses program **branches** (if...else, when, etc.)
-- [x] Uses **iteration** (loops) to repeat things (for, while, etc.)
+- [x] Uses **conditional** instructions to control the program flow *handleBoardCell, printBoardCell, GameState.moveSelectedCoin, handleKeys*
+- [x] Uses program **branches** (if...else, when, etc.) *handleKeys*
+- [x] Uses **iteration** (loops) to repeat things (for, while, etc.) *section, initBoard*
 
 ### Program Documentation
 
@@ -41,15 +41,15 @@ The program code:
 ### Program Testing
 
 The program has been tested and there is documented evidence that:
-- [ ] The game is **fully functional**, showing testing of:
-  - [ ] game setup
-  - [ ] player moves
-  - [ ] players taking turns
+- [x] The game is **fully functional**, showing testing of:
+  - [x] game setup
+  - [x] player moves
+  - [x] players taking turns
   - [ ] scoring (if any)
-  - [ ] players winning
+  - [x] players winning
   - [ ] final feedback (if appropriate)
-- [ ] **Valid (expected) data** has been used to test **all data inputs**
-- [ ] Where tests have failed, **fixes** are discussed and **tests re-run**
+- [x] **Valid (expected) data** has been used to test **all data inputs**
+- [x] Where tests have failed, **fixes** are discussed and **tests re-run**
 
 ---
 
@@ -81,9 +81,9 @@ The program code is well-commented:
 ### Program Testing
 
 The program has been tested using:
-- [ ] A test plan **prepared in advance** of the coding
-- [ ] A test plan that **defines test data values** to be used
-- [ ] Test values that cover **boundary** (limit / edge) cases
+- [x] A test plan **prepared in advance** of the coding
+- [x] A test plan that **defines test data values** to be used
+- [x] Test values that cover **boundary** (limit / edge) cases
 
 ---
 
@@ -111,7 +111,7 @@ The program code:
 ### Program Testing
 
 The program has been tested to be **robust**:
-- [ ] With a **comprehensive and thorough** test plan
-- [ ] Testing **regularly** throughput development, allowing **time for debugging**
-- [ ] Using test values that cover **invalid** (unexpected) cases
-- [ ] Resulting in a program that **copes appropriately** with invalid inputs
+- [x] With a **comprehensive and thorough** test plan
+- [x] Testing **regularly** throughput development, allowing **time for debugging**
+- [x] Using test values that cover **invalid** (unexpected) cases
+- [x] Resulting in a program that **copes appropriately** with invalid inputs

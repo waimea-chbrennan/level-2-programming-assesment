@@ -365,6 +365,59 @@ while(state.board[0]==GOLD_COIN) state.board.shuffle(Random(System.currentTimeMi
 The board initialization now works as intended with no gold coins generated in index 0.
 ![gold not in index 0](screenshots/goldNotOnIndex0.png)
 
+### Testing: Board Display With No Coins (valid/boundary)
+The board should keep the board size consistent even with the cursor moving and coins being removed.
+#### Test Data
+Removed all coins from the board.
+#### Test Result 
+![Removing all coins](screenshots/removeAllCoins.gif)
+FAILED: the board size changes when all the coins are removed. This is bad because it will always happen when the game generated the gold coin in the far right cell.
+This suggests that the height of the board is not constant and linked to the height of a coin.
+```kotlin
+when(slot) {
+    GOLD_COIN ->handleBoardCell(state,index,GOLD_COL,coinAnim)
+    COIN -> handleBoardCell(state,index,SILVER_COL,coinAnim)
+    EMPTY -> {
+    //Can't extract this into printBoardCell as receivership of TextAnim and String as one param is not supported and other logic would be less efficient
+    if (state.cursorIndex == index) {
+        if(state.playerTurnProgress==1){
+            color(SELECTABLE_COL)
+        } else {
+            color(UNSELECTABLE_COL)
+        }
+        bordered(BorderCharacters.CURVED) {}
+        }
+    }
+
+}
+```
+It seems that when the board has no coins and no cursor, the board has no minimum height and so breaks.
+We could fix this with a grid() option in kotter, but there is no minCellHeight or similar
+This means we have to pad out the cell to height 7 where there is no coins or cursor.
+```kotlin
+when(slot) {
+                    GOLD_COIN ->handleBoardCell(state,index,GOLD_COL,coinAnim)
+                    COIN -> handleBoardCell(state,index,SILVER_COL,coinAnim)
+                    EMPTY -> {
+                        //Can't extract this into printBoardCell as receivership of TextAnim and String as one param is not supported and other logic would be less efficient
+                        if (state.cursorIndex == index) {
+                            if(state.playerTurnProgress==1){
+                                color(SELECTABLE_COL)
+                            } else {
+                                color(UNSELECTABLE_COL)
+                            }
+                            bordered(BorderCharacters.CURVED) {}
+                        }
+                        textLine("\n ".repeat(7))
+                    }
+
+                }
+```
+Rerunning test:
+![Removing all coins test 2](screenshots/removeAllCoins2.gif)
+passed: the board size does not now change.
+
+
 ---
 
 ## Example Test Name
@@ -380,6 +433,12 @@ Details of test data. Details of test data. Details of test data. Details of tes
 ![example.png](screenshots/example.png)
 
 Comment on test result. Comment on test result. Comment on test result. Comment on test result. Comment on test result. Comment on test result.
+
+
+
+
+
+
 
 ---
 

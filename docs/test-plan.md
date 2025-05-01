@@ -309,6 +309,12 @@ Run the game multiple times and observe the result of the generated board.
 Create and display a randomly generated board that has 1 gold coin, NUM_SILVER_COINS other coins and
 NUM_BOARD_SPACES spaces in the board. There should only be one coin per cell and the gold coin should now spawn in the 0th index.
 
+## Testing: Board Display With No Coins (valid/boundary)
+The board should keep the board size consistent even with the cursor moving and coins being removed.
+### Test Data to use
+Remove Coins from board.
+### Expected Test Result 
+The board should not lose any cells or change the size of the cells in any way.
 
 
 
